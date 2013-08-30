@@ -25,6 +25,7 @@ class drawing_t{
 		for(int i=0;i<points.size();i++){points.at(i).draw();}
 		for(int i=0;i<polygons.size();i++){polygons.at(i).draw();}
 	}
+	void clear(){lines.clear();points.clear();polygons.clear();}
 };
 
 #endif

@@ -245,10 +245,14 @@ void keyboard(unsigned char key, int x, int y)
 		case 110:
 		case 78:
 			//delete &current_canvas;
+			current_canvas.clear();
+			glutPostRedisplay();
 			break;
 		case 68:
 		case 100:
 			//delete current_drawing
+			current_canvas.current_drawing.clear();
+			glutPostRedisplay();
 			break;
 		case 115:
 		case 83:

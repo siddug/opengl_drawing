@@ -26,6 +26,19 @@ class canvas_t{
 		}
 		current_drawing=*(new drawing_t());
 	}
+	void clear(){
+		//current_drawing.clear();
+		for(int i=0;i<width;i++){
+			std::vector<color_t> vec;
+			for(int j=0;j<height;j++){
+				
+				vec.push_back(background_color); 
+				
+			}
+			pixel_array.at(i)=vec;
+		}
+		
+	}
 };
 
 #endif
