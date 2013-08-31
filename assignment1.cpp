@@ -158,7 +158,13 @@ void display( void )
     	}
     
     if(helptext){
-    	print_string(window_width/1,window_height/2, 0 , GLUT_BITMAP_HELVETICA_12, *(new color_t(255-bg_color.getRed(),255-bg_color.getGreen(),255-bg_color.getRed())), "N - clear canvas.\n D - clear drawing. \n C - change colors and line width in pen and fill mode. Ex: > 200 100 100 4 \n S,L to save and load canvas (Ex : >input.txt). \n F - change view mode. \n 1 - draw lines \n 2 - draw polygons");
+    	print_string(window_width/2-20,window_height-40, 0 , GLUT_BITMAP_HELVETICA_12, *(new color_t(255-bg_color.getRed(),255-bg_color.getGreen(),255-bg_color.getRed())), "N - clear canvas.\n ");
+        	print_string(window_width/2-20,window_height-60, 0 , GLUT_BITMAP_HELVETICA_12, *(new color_t(255-bg_color.getRed(),255-bg_color.getGreen(),255-bg_color.getRed())), "D - clear drawing.");
+        	print_string(window_width/2-100,window_height-80, 0 , GLUT_BITMAP_HELVETICA_12, *(new color_t(255-bg_color.getRed(),255-bg_color.getGreen(),255-bg_color.getRed())), "C - change colors and line width in pen and fill mode. Ex: > 200 100 100 4");
+        	print_string(window_width/2-50,window_height-100, 0 , GLUT_BITMAP_HELVETICA_12, *(new color_t(255-bg_color.getRed(),255-bg_color.getGreen(),255-bg_color.getRed())), "S,L to save and load canvas (Ex : >input.txt).");
+           	print_string(window_width/2-20,window_height-120, 0 , GLUT_BITMAP_HELVETICA_12, *(new color_t(255-bg_color.getRed(),255-bg_color.getGreen(),255-bg_color.getRed())), "F - change view mode.");
+           	print_string(window_width/2-20,window_height-140, 0 , GLUT_BITMAP_HELVETICA_12, *(new color_t(255-bg_color.getRed(),255-bg_color.getGreen(),255-bg_color.getRed())), "1 - draw lines \n");
+           	print_string(window_width/2-20,window_height-160, 0 , GLUT_BITMAP_HELVETICA_12, *(new color_t(255-bg_color.getRed(),255-bg_color.getGreen(),255-bg_color.getRed())), "2 - draw polygons");
     }
     
     glutSwapBuffers();
@@ -390,10 +396,14 @@ void keyboard(unsigned char key, int x, int y)
 		case 72:
 			{
 			helptext =!helptext;
+			glutPostRedisplay();
 			break;
 			}
 		case 51:{
-			current_fill.set_cfm(!current_fill.get_cfm());}
+			current_fill.set_cfm(!current_fill.get_cfm());
+			glutPostRedisplay();
+			break;
+			}
     }
 }
 
