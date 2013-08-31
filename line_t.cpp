@@ -40,6 +40,13 @@ class line_t{
       		if (error >= 0.5) {y = y + ystep;error = error - 1.0;}
     	}
 	}
+	
+	std::string print(){
+		std::stringstream buffer;
+		buffer << line_width;
+		std::string s = point1.print() + std::string("\t") + point2.print() + std::string(" \t") + line_color.print() + std::string("\t") + buffer.str();
+		return s; 
+	}
 
 };
 

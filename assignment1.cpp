@@ -1,5 +1,7 @@
 #include <cstdlib>
 #include <iostream>
+#include <fstream>
+#include <ostream>
 #include <string>
 #include <GL/glut.h>
 #include "pen_t.cpp"
@@ -10,6 +12,7 @@
 #include "drawing_t.cpp"
 #include "canvas_t.cpp"
 
+bool helptext=false;
 int window_width = 1000;
 int window_height = 600;
 color_t bg_color(255,255,255);
@@ -21,7 +24,6 @@ bool drawing_lines=false;
 bool drawing_polygon=false;
 std::string current_op="points";
 std::vector<point_t> input_storage;
-
 
 void print_string(float x, float y, float z, void *font, color_t c=*(new color_t(255,255,255)), std::string str="") 
 {  
@@ -128,7 +130,7 @@ void display( void )
     
     
     if(!fill_view){
-    	print_string(window_width/2-30,10, 0 , GLUT_BITMAP_HELVETICA_12, *(new color_t(255-bg_color.getRed(),255-bg_color.getGreen(),255-bg_color.getRed())), "Drawing Mode");
+    	print_string(window_width/2-30,10, 0 , GLUT_BITMAP_HELVETICA_12, *(new color_t(255-bg_color.getRed(),255-bg_color.getGreen(),255-bg_color.getRed())), "Drawing Mode (h for help)");
     	print_string(5,window_height/2, 0 , GLUT_BITMAP_HELVETICA_12, *(new color_t(255-bg_color.getRed(),255-bg_color.getGreen(),255-bg_color.getRed())), "PEN");
 		point_t p(7,window_height/2-20,current_pen.get_line_width(),current_pen.get_draw_color()); //p.draw();
 		point_t p2(30,window_height/2-20,current_pen.get_line_width(),current_pen.get_draw_color()); //p.draw();
@@ -136,7 +138,7 @@ void display( void )
     	}
     
     else{
-    	print_string(window_width/2-30, 10, 0, GLUT_BITMAP_HELVETICA_12, *(new color_t(255-bg_color.getRed(),255-bg_color.getGreen(),255-bg_color.getRed())), "Filling Mode");
+    	print_string(window_width/2-30, 10, 0, GLUT_BITMAP_HELVETICA_12, *(new color_t(255-bg_color.getRed(),255-bg_color.getGreen(),255-bg_color.getRed())), "Filling Mode (h for help)");
     	
     	print_string(5,window_height/2, 0 , GLUT_BITMAP_HELVETICA_12, *(new color_t(255-bg_color.getRed(),255-bg_color.getGreen(),255-bg_color.getRed())), "FILL");
     	
@@ -155,6 +157,9 @@ void display( void )
 		
     	}
     
+    if(helptext){
+    	print_string(window_width/1,window_height/2, 0 , GLUT_BITMAP_HELVETICA_12, *(new color_t(255-bg_color.getRed(),255-bg_color.getGreen(),255-bg_color.getRed())), "N - clear canvas.\n D - clear drawing. \n C - change colors and line width in pen and fill mode. Ex: > 200 100 100 4 \n S,L to save and load canvas (Ex : >input.txt). \n F - change view mode. \n 1 - draw lines \n 2 - draw polygons");
+    }
     
     glutSwapBuffers();
     
@@ -256,12 +261,139 @@ void keyboard(unsigned char key, int x, int y)
 			break;
 		case 115:
 		case 83:
-			//save canvas
+			{ 
+			std::string file_name;
+			std::cin>>file_name;
+			const char * char_name = file_name.c_str();
+			std::ofstream f(char_name);
+     		
+  			std::vector<point_t>ps=current_canvas.current_drawing.get_points();
+			std::cout<<(float)ps.size()<<" ";
+			f<<(float)ps.size()<<" ";
+			
+			for(int i=0;i<ps.size();i++){
+				point_t p=ps.at(i);color_t c = p.get_color();
+				std::cout<<p.get_x()<<" "<<p.get_y()<<" "<<p.get_point_width()<<" "<<c.getRed()<<" "<<c.getGreen()<<" "<<c.getBlue()<<" ";
+				f<<p.get_x()<<" "<<p.get_y()<<" "<<p.get_point_width()<<" "<<c.getRed()<<" "<<c.getGreen()<<" "<<c.getBlue()<<" ";
+				
+			}
+			std::cout<<"\n";
+			f<<"\n";
+			
+			std::vector<line_t>ls=current_canvas.current_drawing.get_lines();
+			std::cout<<ls.size()<<" ";
+			f<<ls.size()<<" ";
+			for(int i=0;i<ls.size();i++){
+				line_t l=ls.at(i);
+				point_t p1=l.get_point1();
+				point_t p2=l.get_point2();
+				color_t c = l.get_color();
+				std::cout<<p1.get_x()<<" "<<p1.get_y()<<" ";
+				std::cout<<p2.get_x()<<" "<<p2.get_y()<<" ";
+				std::cout<<l.get_line_width()<<" ";
+				std::cout<<c.getRed()<<" "<<c.getGreen()<<" "<<c.getBlue()<<" ";
+				
+				f<<p1.get_x()<<" "<<p1.get_y()<<" ";
+				f<<p2.get_x()<<" "<<p2.get_y()<<" ";
+				f<<l.get_line_width()<<" ";
+				f<<c.getRed()<<" "<<c.getGreen()<<" "<<c.getBlue()<<" ";
+			}
+			std::cout<<"\n";
+			f<<"\n";
+			std::vector<polygon_t>pos=current_canvas.current_drawing.get_polygons();
+			std::cout<<pos.size()<<" ";
+			f<<pos.size()<<" ";
+			for(int i=0;i<pos.size();i++){
+				polygon_t poly=pos.at(i);
+				std::vector<point_t> ps2=poly.get_points();
+				std::cout<<ps2.size()<<" ";
+				f<<ps2.size()<<" ";
+				std::cout<<poly.get_mesh_width()<<" ";
+				f<<poly.get_mesh_width()<<" ";
+				color_t c= poly.get_current_border_color();
+				std::cout<<c.getRed()<<" "<<c.getGreen()<<" "<<c.getBlue()<<" ";
+				f<<c.getRed()<<" "<<c.getGreen()<<" "<<c.getBlue()<<" ";
+				for(int j=0;j<ps2.size();j++){
+					point_t p=ps2.at(j);
+					std::cout<<p.get_x()<<" "<<p.get_y()<<" ";
+					f<<p.get_x()<<" "<<p.get_y()<<" ";
+				}
+			}
+			std::cout<<"\n";
+			f<<"\n";
+			for(int i=0;i<window_width;i++){
+				for(int j=0;j<window_height;j++){
+					color_t c=current_canvas.pixel_array[i][j];
+					f<<c.getRed()<<" "<<c.getGreen()<<" "<<c.getBlue()<<" ";
+				}
+				f<<"\n";
+			}
+			glutPostRedisplay();
 			break;
+		}
 		case 76:
 		case 108:
+		{
 			//load canvas
+			std::string file_name;
+			std::cin>>file_name;
+			const char * char_name = file_name.c_str();
+			std::fstream myfile(char_name, std::ios_base::in);
+			current_canvas.current_drawing.clear();
+			current_canvas.clear();
+			int tot_ps;
+			myfile>>tot_ps;
+			for(int i=0;i<tot_ps;i++){
+				int x,y,r,g,b;float w;
+				myfile>>x>>y>>w>>r>>g>>b;
+				point_t p(x, y, w, *(new color_t(r,g,b)));
+				current_canvas.current_drawing.insert_point(p);
+			}
+			int tot_ls;
+			myfile>>tot_ls;
+			for(int i=0;i<tot_ls;i++){
+				int x,y,x1,y1,r,g,b;float w;
+				myfile>>x>>y>>x1>>y1>>w>>r>>g>>b;
+				point_t p(x,y,w,*(new color_t(r,g,b)));
+				point_t p2(x1,y1,w,*(new color_t(r,g,b)));
+				line_t l(p,p2,w,*(new color_t(r,g,b)));
+				current_canvas.current_drawing.insert_line(l);
+			}
+			int tot_pol;
+			myfile>>tot_pol;
+			for(int i=0;i<tot_pol;i++){
+				int t_ps; float w; int r,g,b;
+				myfile>>t_ps>>w>>r>>g>>b;
+				//int x,y;
+				//myfile>>x>>y;
+				std::vector<point_t> points;
+				for(int j=0;j<t_ps;j++){
+					myfile>>x>>y;
+					point_t p(x,y,w,*(new color_t(r,g,b)));
+					points.push_back(p);
+				}
+				polygon_t poly(points,*(new color_t(r,g,b)),*(new color_t(r,g,b)),*(new color_t(r,g,b)),w);
+				current_canvas.current_drawing.insert_polygon(poly);
+			}
+			for(int i=0;i<window_width;i++){
+				for(int j=0;j<window_height;j++){
+					int r,g,b;
+					myfile>>r>>g>>b;
+					current_canvas.pixel_array[i][j]=*(new color_t(r,g,b));
+				}
+				//f<<"\n";
+			}
+			glutPostRedisplay();
 			break;
+			}
+		case 104:
+		case 72:
+			{
+			helptext =!helptext;
+			break;
+			}
+		case 51:{
+			current_fill.set_cfm(!current_fill.get_cfm());}
     }
 }
 
@@ -303,6 +435,10 @@ void mouse(int button, int state, int x, int y)
 
 int main (int argc, char *argv[]) 
 {
+	std::fstream configfile("config", std::ios_base::in);
+	int r,g,b;
+	configfile>>r>>g>>b;
+	bg_color.setRed(r);bg_color.setGreen(g);bg_color.setBlue(b);
     //initializing a window with width and height as specified
     glutInit( &argc, argv );
     glutInitDisplayMode( GLUT_RGBA | GLUT_DOUBLE );
@@ -319,10 +455,3 @@ int main (int argc, char *argv[])
     glutMainLoop();
 }
 
-
-//----------WHATS LEFT-----------//
-//checker filling - contact revent
-//saving and loading canvas
-//clearing canvas and drawing
-//report
-//publishing at /~

@@ -43,6 +43,22 @@ class polygon_t{
 		if(tofill){}// fill
 	
 	}
+	
+	std::string print(){
+		std::stringstream buffer;
+		buffer << points.size();
+		std::string s = buffer.str() + std::string("\t");
+		for(int i=0;i<points.size();i++){
+			//s+= points.at(i).print() + std::string("\t");
+			s+= std::string("point") + std::string("\t");
+		}
+		
+		//std::stringstream buffer;
+		buffer << mesh_width;
+		s+=buffer.str();
+		return s;
+	}
+	
 };
 
 #endif
