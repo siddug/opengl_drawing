@@ -71,11 +71,19 @@ $ git checkout gh-pages
 <a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Compiling instructions and Examples</h3>
 <p> > g++ -lGL -lGLU -lglut -o canvas assignment1.cpp <br/> use the above command to create the executable named canvas in the project folder (By default there's an executable. but just in case you edit any file). <br/>
 > ./canvas <br/> Use the above command to open the interface. <br/> <br/>
-Input formats: the interface accepts input from keyboard (only specific keys) and mouse. press "h" while window is active to get the detailed list of keyboard input options. You can refer the same below
+<u>Input formats:</u> the interface accepts input from keyboard (only specific keys) and mouse. press "h" while window is active to get the detailed list of keyboard input options. You can refer the same below
 <br/> <br/>
-<i>N - clear canvas.<br/> D - clear drawing. <br/> C - change colors and line width in pen and fill mode. Ex: > 200 100 100 4 <br/> S,L to save and load canvas Ex : >input.txt. <br/> F - change view mode. <br/> 1 - toggle draw lines mode <br/> 2 - toggle draw polygons mode </i><br/>
+<i style="font-style: italic">N - clear canvas.<br/> D - clear drawing. <br/> C - change colors and line width in pen and fill mode. Ex: > 200 100 100 4 <br/> S,L - save and load canvas.  Ex : > input.txt. <br/> F - change view mode. <br/> 1 - toggle draw lines mode <br/> 2 - toggle draw polygons mode </i><br/>br/>
 
-<em>Important note: for commands like S, L, C where additional input is required (like file name or color attributes). The additional input must given from terminal. (i.e type 'S' (say) on active canvas. shift to terminal and type filename there to save the canvas to that file. You can switch back to canvas once command is finished).  If you are in pen mode, For C (to change pen attributes), the extra input in terminal requires R G B values followed by pen width. If you are in fill mode, the same command requires R G B R1 G1 B1 R2 G2 B2 (first three for general fill. next two for checker mode). The R G B are red blue green values of the color you desire (>0 <=255) </em> 
+<em>Important note: for commands like S, L, C where additional input is required (like file name or color attributes). The additional input must be given from terminal. (i.e type 'S' (say) on active canvas. shift to terminal and type filename there to save the canvas to that file. You can switch back to canvas once command is finished).  If you are in pen mode, For C (to change pen attributes), the extra input in terminal requires R G B values followed by pen width. If you are in fill mode, the same command requires R G B R1 G1 B1 R2 G2 B2 (first three for general fill. next two for checker mode). The R G B are red blue green values of the color you desire to use (>0 <=255). </em> 
+<br/> <br/>
+
+Use mouse to make points (general), draw polygons (polygon mode), lines (line mode) or fill color (fill mode). <br/> <br/>
+
+Color of the canvas can be altered by changing the R, G , B values in config file before you start the canvas. <br/> <br/> Below is a simple example drawing made using canvas. We included "sachin.txt" file saved during this drawing. Load the same to get similar figure onto your canvas.
+
+<br/> <br/>
+<img href="expic.png"></img>
 
 </p>
 <!--<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
